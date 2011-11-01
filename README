@@ -1,1 +1,24 @@
-RMarket is a ruby gem for modeling stock market simulations.
+RMarket is a ruby gem for making stock market simulations.
+
+== Included Classes
+
+* Order - container for a limit order; stores price, quantity, symbol, and trader
+* OrderLedger - one side of a CDA order book; enforces transactions to occur at the current bid/ask price depending on its assigned type
+* OrderBook - a model of a CDA order book; manages a buy and sell ledger and enforces orders to match a specific label
+* Trader - tracks a portfolio or stocks and cash; passes off the real work to the user defined objects: TradingStrategy, ValueFunction, and Beliefs
+
+== Contributing
+
+If you are interested in making a contribution, first propose the change or added feature on the issues page.  Once this project is a little more hammered down, we'll move to the fork-pull request model.
+
+== Copyright
+
+(The MIT License)
+
+Copyright (c) 2011 {bcassell (Ben-Alexander Cassell)}[http://github.com/bcassell] {egtaonline (University of Michigan - Strategic Reasoning Group)}[http://github.com/egtaonline]
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.

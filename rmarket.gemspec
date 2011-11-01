@@ -7,9 +7,9 @@ Gem::Specification.new do |s|
   s.version     = RMarket::VERSION
   s.authors     = ["Ben-Alexander Cassell"]
   s.email       = ["bcassell@umich.edu"]
-  s.homepage    = ""
-  s.summary     = %q{rmarket provides classes for modeling market interactions in ruby}
-  s.description = %q{rmarket provides classes for modeling market interactions in ruby}
+  s.homepage    = "http://www.github.com/egtaonline/rmarket"
+  s.summary     = %q{Classes for modeling market interactions in ruby}
+  s.description = %q{rmarket provides classes for modeling market interactions in ruby, such as an order book that operates as a CDA.}
 
   s.rubyforge_project = "rmarket"
 
