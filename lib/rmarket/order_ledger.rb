@@ -6,38 +6,74 @@ module RMarket
       @type = type
     end
     
-    def submit_order(order)
-      remove_prior_orders(order.trader)
-      add_order(order)
+    def transact(order)
+      while order.quantity > 0 && price != 0 && price != 1/0.0
+        if @type == "buy" && order.type == "sell"
+          if bid > order.price
+            if @orders.last.quantity > order.quantity
+              @orders.last.trader.update_account(order.quantity, -bid*order.quantity)
+              order.trader.update_account(-order.quantity, bid*order.quantity)
+              @orders.last.quantity -= order.quantity
+              return nil
+            else
+              @orders.last.trader.update_account(@orders.last.quantity, -bid*@orders.last.quantity)
+              order.trader.update_account(-@orders.last.quantity, bid*@orders.last.quantity)
+              order.quantity -= @orders.last.quantity
+              @orders.pop
+              return nil if order.quantity == 0
+            end
+          else
+            return order
+          end
+        elsif @type == "sell" && order.type == "buy"
+          if ask < order.price
+            if @orders.first.quantity > order.quantity
+              @orders.first.trader.update_account(-order.quantity, ask*order.quantity)
+              order.trader.update_account(order.quantity, -ask*order.quantity)
+              @orders.first.quantity -= order.quantity
+              return nil
+            else
+              @orders.first.trader.update_account(-@orders.first.quantity, ask*@orders.first.quantity)
+              order.trader.update_account(@orders.first.quantity, -ask*@orders.first.quantity)
+              order.quantity -= @orders.first.quantity
+              @orders.delete_at(0)
+              return nil if order.quantity == 0
+            end
+          else
+            return order
+          end
+        else
+          raise "Orders of the same type cannot transact"
+        end
+      end
+      return order
     end
     
-    def outstanding_order_count
-      @orders.size
+    def submit_order(order)
+      puts "called"
+      @type ||= order.type
+      index = @orders.index{|i| i.price > order.price}
+      index == nil ? @orders << order : @orders.insert(index, order)
     end
+    
+    def outstanding_order_count; @orders.size; end
 
     def bid
       raise "OrderLedger is of type \"sell\" and cannot supply an \"bid\"" if @type == "sell"
-      @orders.first
+      @orders == [] ? 0 : @orders.last.price
     end
 
     def ask
       raise "OrderLedger is of type \"buy\" and cannot supply an \"ask\"" if @type == "buy"
-      @orders.first
+      @orders == [] ? 1/0.0 : @orders.first.price
     end
-
+    
+    def remove_prior_orders(trader);  @orders.reject!{|x| x.trader == trader}; end
+    
     private
     
-    def add_order(order)
-      if @orders == []
-        @type ||= order.type
-        @orders << order
-      else
-        @orders.insert(@orders.index{|i| i.price > order.price}, order)
-      end
-    end
-    
-    def remove_prior_orders(trader)
-      @orders.reject!{|x| x.trader == trader}
+    def price
+      @type == "buy" ? bid : ask
     end
   end
 end

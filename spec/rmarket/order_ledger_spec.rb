@@ -16,9 +16,8 @@ module RMarket
             @order_ledger.bid.should == 1.5
           end
           it "should implicitly become a buy ledger" do
-            @order_ledger.ask.should raise_error(RunTimeError, "OrderLedger is of type \"buy\" and cannot supply an \"ask\"")
+            lambda{ @order_ledger.ask }.should raise_error("OrderLedger is of type \"buy\" and cannot supply an \"ask\"")
           end
-          
         end
       end
     end
