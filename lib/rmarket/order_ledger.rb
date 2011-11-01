@@ -1,9 +1,10 @@
 module RMarket
   class OrderLedger
     
-    def initialize(type=nil)
+    def initialize(type=nil, asset_label="")
       @orders = []
       @type = type
+      @asset_label = asset_label
     end
     
     def transact(order)
@@ -11,13 +12,13 @@ module RMarket
         if @type == "buy" && order.type == "sell"
           if bid > order.price
             if @orders.last.quantity > order.quantity
-              @orders.last.trader.update_account(order.quantity, -bid*order.quantity)
-              order.trader.update_account(-order.quantity, bid*order.quantity)
+              @orders.last.trader.update_account(-bid*order.quantity, order.quantity, @asset_label)
+              order.trader.update_account(bid*order.quantity, -order.quantity, @asset_label)
               @orders.last.quantity -= order.quantity
               return nil
             else
-              @orders.last.trader.update_account(@orders.last.quantity, -bid*@orders.last.quantity)
-              order.trader.update_account(-@orders.last.quantity, bid*@orders.last.quantity)
+              @orders.last.trader.update_account(-bid*@orders.last.quantity, @orders.last.quantity, @asset_label)
+              order.trader.update_account(bid*@orders.last.quantity, -@orders.last.quantity, @asset_label)
               order.quantity -= @orders.last.quantity
               @orders.pop
               return nil if order.quantity == 0
@@ -28,13 +29,13 @@ module RMarket
         elsif @type == "sell" && order.type == "buy"
           if ask < order.price
             if @orders.first.quantity > order.quantity
-              @orders.first.trader.update_account(-order.quantity, ask*order.quantity)
-              order.trader.update_account(order.quantity, -ask*order.quantity)
+              @orders.first.trader.update_account(ask*order.quantity, -order.quantity, @asset_label)
+              order.trader.update_account(-ask*order.quantity, order.quantity, @asset_label)
               @orders.first.quantity -= order.quantity
               return nil
             else
-              @orders.first.trader.update_account(-@orders.first.quantity, ask*@orders.first.quantity)
-              order.trader.update_account(@orders.first.quantity, -ask*@orders.first.quantity)
+              @orders.first.trader.update_account(ask*@orders.first.quantity, -@orders.first.quantity, @asset_label)
+              order.trader.update_account(-ask*@orders.first.quantity, @orders.first.quantity, @asset_label)
               order.quantity -= @orders.first.quantity
               @orders.delete_at(0)
               return nil if order.quantity == 0

@@ -1,11 +1,15 @@
 module RMarket
   class OrderBook
-    def initialize
-      @buy_ledger = OrderLedger.new("buy")
-      @sell_ledger = OrderLedger.new("sell")
+    attr_reader :asset_label
+    
+    def initialize(asset_label="")
+      @buy_ledger = OrderLedger.new("buy", asset_label)
+      @sell_ledger = OrderLedger.new("sell", asset_label)
+      @asset_label = asset_label
     end
     
     def matches?(order)
+      return false if order.asset_label != @asset_label
       if order.type == "buy"
         return false if @sell_ledger.outstanding_order_count == 0 || ask > order.price
       else
@@ -15,6 +19,7 @@ module RMarket
     end
     
     def submit_order(order)
+      raise "Asset label of order does not match OrderBook" if order.asset_label != @asset_label
       if order.type == "buy"
         order = @sell_ledger.transact(order) if matches?(order)
         @buy_ledger.submit_order(order) if order != nil

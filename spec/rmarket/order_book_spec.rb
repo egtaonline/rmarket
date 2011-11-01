@@ -23,6 +23,9 @@ module RMarket
     describe "#submit_order" do
       context "empty order book" do
         before(:each) { @order_book = OrderBook.new }
+        it "should raise error if order doesn't match asset type" do
+          lambda{ @order_book.submit_order(Order.new("buy", 1.5, nil, 1, "fasd"))}.should raise_error("Asset label of order does not match OrderBook")
+        end
         
         context "incoming buy order" do
           before(:each) { @order_book.submit_order(Order.new("buy", 1.5)) }
@@ -90,8 +93,8 @@ module RMarket
           
           context "incoming sell order is lower" do
             before(:each) do
-              @traderA.should_receive("update_account").with(1, -1.5)
-              @traderB.should_receive("update_account").with(-1, 1.5)
+              @traderA.should_receive("update_account").with(-1.5, 1, "")
+              @traderB.should_receive("update_account").with(1.5, -1, "")
               @order_book.submit_order(Order.new("sell", 1.3, @traderB))
             end
             
@@ -120,8 +123,8 @@ module RMarket
           
           context "incoming buy order is higher" do
             before(:each) do
-              @traderA.should_receive("update_account").with(-1, 1.5)
-              @traderB.should_receive("update_account").with(1, -1.5)
+              @traderA.should_receive("update_account").with(1.5, -1, "")
+              @traderB.should_receive("update_account").with(-1.5, 1, "")
               @order_book.submit_order(Order.new("buy", 1.7, @traderB))
             end
             it "should have 0 buy orders" do
