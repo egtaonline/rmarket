@@ -51,7 +51,6 @@ module RMarket
     end
     
     def submit_order(order)
-      puts "called"
       @type ||= order.type
       index = @orders.index{|i| i.price > order.price}
       index == nil ? @orders << order : @orders.insert(index, order)
@@ -60,13 +59,23 @@ module RMarket
     def outstanding_order_count; @orders.size; end
 
     def bid
-      raise "OrderLedger is of type \"sell\" and cannot supply an \"bid\"" if @type == "sell"
+      raise "OrderLedger is of type \"sell\" and cannot supply a \"bid\"" if @type == "sell"
       @orders == [] ? 0 : @orders.last.price
+    end
+    
+    def bid_quantity
+      raise "OrderLedger is of type \"sell\" and cannot supply a \"bid\"" if @type == "sell"
+      @orders == [] ? 0 : @orders.last.quantity
     end
 
     def ask
       raise "OrderLedger is of type \"buy\" and cannot supply an \"ask\"" if @type == "buy"
       @orders == [] ? 1/0.0 : @orders.first.price
+    end
+    
+    def ask_quantity
+      raise "OrderLedger is of type \"buy\" and cannot supply an \"ask\"" if @type == "buy"
+      @orders == [] ? 0 : @orders.first.quantity
     end
     
     def remove_prior_orders(trader);  @orders.reject!{|x| x.trader == trader}; end

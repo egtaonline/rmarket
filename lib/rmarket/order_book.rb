@@ -35,10 +35,16 @@ module RMarket
     def bid; @buy_ledger.bid; end
     def ask; @sell_ledger.ask; end
 
+    def bid_quantity; @buy_ledger.bid_quantity; end
+    def ask_quantity; @sell_ledger.ask_quantity; end
+
     def remove_prior_orders(trader)
       @buy_ledger.remove_prior_orders(trader)
       @sell_ledger.remove_prior_orders(trader)
     end
     
+    def snapshot
+      {"asset_label" => @asset_label, "bid" => bid, "bid_quantity" => bid_quantity, "ask" => ask, "ask_quantity" => ask_quantity}
+    end
   end
 end
