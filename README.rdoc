@@ -6,7 +6,9 @@ RMarket is a ruby gem for making stock market simulations.
 * OrderLedger - one side of a CDA order book; enforces transactions to occur at the current bid/ask price depending on its assigned type
 * OrderBook - a model of a CDA order book; manages a buy and sell ledger and enforces orders to match a specific label
 * Trader - tracks a portfolio or stocks and cash; passes off the real work to the user defined objects: TradingStrategy, ValueFunction, and Beliefs
-
+* News - container class for distributing information to traders
+* NewsGenerator - generates News by adding noise from a given distribution to dividend shock information
+* DividendGenerator - generates dividends from a given distribution according to a mean reverting process
 == Contributing
 
 If you are interested in making a contribution, first propose the change or added feature on the issues page.  Once this project is a little more hammered down, we'll move to the fork-pull request model.
